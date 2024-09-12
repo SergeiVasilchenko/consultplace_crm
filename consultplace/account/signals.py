@@ -52,7 +52,7 @@ def assign_and_send_test_task(sender, instance, created, **kwargs):
             #     f"{test_task.url}"
             # )
 
-            # token = os.getenv('TELEGRAM_TOKEN')
+            # token = os.getenv('BOT_TOKEN')
             # try:
             #     send_telegram_message_task.delay(chat_id, message, token)
             #     logger.info(
@@ -181,7 +181,7 @@ def update_student_position(sender, instance, created, **kwargs):
             f"\"{instance.comment}\"\n"
             f"Мы видим вас в роли: {instance.student.get_position_display()}."
         )
-        token = os.getenv('TELEGRAM_TOKEN')
+        token = os.getenv('BOT_TOKEN')
         send_telegram_message_task.delay(chat_id, message, token)
         logger.info(
             f"Message sent to {instance.student.full_name}\n"

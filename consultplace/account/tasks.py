@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-TELEGRAM_API_URL = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
+token = os.getenv('BOT_TOKEN')
+TELEGRAM_API_URL = f'https://api.telegram.org/bot{token}/sendMessage'
 
 
 @shared_task
@@ -23,7 +23,7 @@ def send_telegram_message_task(chat_id, message, token):
     Функция отправит сообщение о предложенной position в телеграм бот.
     Запускается сигналом update_student_position.
     """
-    token = TELEGRAM_TOKEN
+    token = os.getenv('BOT_TOKEN')
     telegram_api_url = f'https://api.telegram.org/bot{token}/sendMessage'
     payload = {
         'chat_id': chat_id,
@@ -54,7 +54,7 @@ def send_bulk_messages(mailing_id):
     try:
         mailing = Mailing.objects.get(id=mailing_id)
         message = mailing.message
-        token = TELEGRAM_TOKEN
+        token = os.getenv('BOT_TOKEN')
         for student in mailing.student.all():
             chat_id = student.telegram_user_id
             send_telegram_message.delay(chat_id, message, token)
@@ -116,7 +116,7 @@ def schedule_notification_task(test_task_evaluation_id):
         "Осталась 1 минута до окончания срока выполнения тестового задания."
     )
 
-    token = TELEGRAM_TOKEN
+    token = os.getenv('BOT_TOKEN')
     telegram_api_url = f'https://api.telegram.org/bot{token}/sendMessage'
     payload = {
         'chat_id': chat_id,
@@ -159,7 +159,7 @@ def deadline_notification_task(test_task_evaluation_id):
         "По остальным вопросам обращайтесь к @Dariasssa"
     )
 
-    token = TELEGRAM_TOKEN
+    token = os.getenv('BOT_TOKEN')
     telegram_api_url = f'https://api.telegram.org/bot{token}/sendMessage'
     payload = {
         'chat_id': chat_id,
@@ -263,7 +263,7 @@ def invitation_deadline_notification(invitation_id):
 
 @shared_task
 def send_telegram_message_invitation(chat_id, text, inline_buttons=None):
-    token = TELEGRAM_TOKEN
+    token = os.getenv('BOT_TOKEN')
     url = f'https://api.telegram.org/bot{token}/sendMessage'
     payload = {
         'chat_id': chat_id,
@@ -313,7 +313,7 @@ def send_project_update_notification(project_id, changes):
 
 @shared_task
 def send_telegram_message_proj_update(chat_id, text):
-    token = TELEGRAM_TOKEN
+    token = os.getenv('BOT_TOKEN')
     url = f'https://api.telegram.org/bot{token}/sendMessage'
     payload = {
         'chat_id': chat_id,
