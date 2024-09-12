@@ -1,0 +1,93 @@
+version: '3'
+
+volumes:
+  consultplace_data:
+  static_volume:
+  media_volume:
+
+services:
+  db:
+    image: postgres:13.10
+    env_file: .env
+    volumes:
+      - consultplace_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  backend:
+    image: youstars/crm_leo-backend:latest
+    env_file: .env
+    volumes:
+     - static_volume:/app/static/
+     - media_volume:/app/media/
+    depends_on:
+      - db
+      # - redis
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+
+  # redis:
+  #   image: redis:7.0.11
+  #   ports:
+  #     - "6380:6380"
+
+  bot:
+    image: youstars/crm_leo-bot:latest
+    # build: ./bot
+    env_file: .env_bot
+    depends_on:
+      # - redis
+      - db
+      - backend
+      - nginx
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/api/students/create/"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+
+  celery:
+    image: youstars/crm_leo-backend:latest
+    #image: crm_leo-backend
+    env_file: .env
+    command: celery -A account worker --loglevel=info
+    depends_on:
+      # - redis
+      - backend
+    volumes:
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+
+  celery-beat:
+    image: youstars/crm_leo-backend:latest
+    volumes:
+      - static_volume:/app/static/
+      - media_volume:/app/media/
+    env_file: .env
+    command: celery -A account beat --loglevel=info
+    depends_on:
+      - celery
+      # - redis
+      - db
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+
+  nginx:
+    image: youstars/crm_leo-nginx:latest
+    # build: ./gateway/
+    # image: nginx:1.19.3
+    ports:
+      - "9000:80"
+    volumes:
+      # - ./gateway/nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/usr/share/nginx/html/static/
+      - media_volume:/usr/share/nginx/html/media/
+    depends_on:
+      - backend

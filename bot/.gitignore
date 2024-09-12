@@ -1,0 +1,8 @@
+/venv/
+/.idea/
+/py_log.log
+/data/users1.json
+/data/users.json
+/data/review.json
+/data/config.py
+/.env/

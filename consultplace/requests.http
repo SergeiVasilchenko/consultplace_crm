@@ -1,0 +1,7 @@
+GET http://localhost/api/list/
+Content-Type: application/json
+
+###
+
+GET https://consultplacetest.sytes.net/api/testtasks/
+Content-Type: application/json

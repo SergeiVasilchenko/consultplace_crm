@@ -1,0 +1,30 @@
+<table>
+    <tr>
+        <th>ФИО</th>
+        <th>Мобильный телефон</th>
+        <th>Электронная почта</th>
+        <th>Ник в Телеграм</th>
+        <th>Возраст</th>
+        <th>Пол</th>
+        <th>ВУЗ</th>
+        <th>Курс</th>
+        <th>Факультет</th>
+        <th>Статус</th>
+        <th>Часов в неделю</th>
+    </tr>
+    {% for student in students %}
+    <tr>
+        <td><a href="{{ student.change_url }}">{{ student.full_name }}</a></td>
+        <td>{{ student.mobile_phone }}</td>
+        <td>{{ student.email }}</td>
+        <td>{{ student.tg_nickname }}</td>
+        <td>{{ student.age }}</td>
+        <td>{{ student.gender }}</td>
+        <td>{{ student.university }}</td>
+        <td>{{ student.course }}</td>
+        <td>{{ student.faculty }}</td>
+        <td></td>
+        <td>{{ student.hours_per_week }}</td>
+    </tr>
+    {% endfor %}
+</table>
