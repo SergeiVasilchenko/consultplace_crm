@@ -1,3 +1,81 @@
+# Deploy the Project on a Remote Server
+
+## Preparation
+
+1. **Create environment variable files in the git repository:**
+
+    - Create a file for the bot:
+      ```bash
+      touch bot/.env_bot
+      ```
+      with the following variables:
+      ```env
+      BOT_TOKEN=<your value>
+      REDIS_HOST=<your remote server IP>
+      REDIS_PORT=6379
+      REDIS_DB=2
+      ```
+
+    - Create a file for the application:
+      ```bash
+      touch consultplsce/.env
+      ```
+      with the following variables:
+      ```env
+      BOT_TOKEN=<your value>
+      SECRET_KEY=<django project secret key>
+      POSTGRES_DB=<your value>
+      POSTGRES_PASSWORD=<your value>
+      POSTGRES_USER=<your value>
+      DB_HOST=db  # (must match the database container name)
+      DB_PORT=5432
+      CELERY_BROKER_URL=redis://<your remote server IP>:6379/1
+      CELERY_RESULT_BACKEND=redis://<your remote server IP>:6379/1
+      ```
+
+2. **Add secrets to the git repository:**
+
+   In **Settings > Secrets and variables > Actions** for the repository, the following secrets must be specified:
+   - `BOT_TOKEN`
+   - `SECRET_KEY`
+   - `POSTGRES_DB`
+   - `POSTGRES_PASSWORD`
+   - `POSTGRES_USER`
+   - `DB_HOST`
+   - `CELERY_BROKER_URL`
+   - `CELERY_RESULT_BACKEND`
+   - `REDIS_HOST`
+   - `REDIS_PORT`
+   - `REDIS_DB`
+
+3. **Server connection:**
+   - Git must be installed on the remote server, and the server must be connected via SSH to the repository.
+
+4. **Install Redis on the server:**
+   - Redis should be installed on the remote server and configured to listen on the default port (6379).
+
+5. **Check the repository branch:**
+   - Ensure that the correct branch of the repository for deployment is specified in `main.yml`.
+
+6. **Configure DockerHub repositories:**
+   - In the `docker-compose` files, for the `image:` directive, specify the DockerHub repositories you have read and write access to:
+     - `<your dockerhub username>/crm_leo-backend:latest`
+     - `<your dockerhub username>/crm_leo-bot:latest`
+     - `<your dockerhub username>/crm_leo-nginx:latest`
+
+     **Important:** Double-check that all `image:` references point to your repository.
+
+## Launch
+
+- **From the local machine:**
+  ```bash
+  git push
+
+**DEV youstras workflow**
+   - Will run tests.
+   - Will rebuild DockerHub images for the containers and push them to the DockerHub repositories.
+   - During deployment, it will `copy docker-compose.production.yml`, recreate the `.env` files, and run daemonized docker compose.
+
 # Развернуть проект на удаленном сервере
 
 ## Подготовка
@@ -71,7 +149,10 @@
   ```bash
   git push
 
-
+**DEV youstras workflow**
+   - запустит тесты
+   - пересоберет оразы dockerhub для контейнеров и отправит их в репозитории dockerhub
+   - во время деплоя скопирует `docker-compose.production.yml`, пересоздаст `.env` файлы и запустит docker-compose в режиме демона
 
 
 # consultplace_crm!!!
