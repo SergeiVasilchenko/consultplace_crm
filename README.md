@@ -1,3 +1,39 @@
+# Project Overview
+This is an MVP version of a platform project built with Django, integrated with a user interface via a Telegram bot. In this version, the admin panel is enabled, an API is implemented, Django signals are functional, and asynchronous tasks using Celery on Redis are configured. User registration occurs through the Telegram bot. The service is a hybrid of financial consulting and an educational resource.
+
+## Features
+- **Telegram Bot Integration**: Users interact with the platform via Telegram.
+- **Django Admin Panel**: Admin interface for managing users, projects, and tasks.
+- **API**: Exposes API endpoints for various platform interactions.
+- **Celery Tasks**: Asynchronous task processing using Celery with Redis as the broker.
+- **User Registration**: Users register through the Telegram bot and receive tasks and project invitations, and so on.
+- **Notification System**: Reminders and notifications sent via Telegram for tasks and deadlines.
+
+## User Scenario
+- The user registers through the Telegram bot, which creates an entity in the database.
+- A random financial consulting test task is assigned to this entity, with a set deadline for completion.
+- 24 hours before the deadline, the user receives a reminder (if necessary) through the Telegram bot.
+- The user submits the completed test task by sharing a file link.
+- Authorized users review the task and offer the test-taker one of three positions:
+  - **Student**: Follows a course in financial consulting.
+  - **Intern**: Participates in analytics on a voluntary basis.
+  - **Analyst**: Engages in paid projects.
+
+## Admin Workflow
+- Admins create projects and invite selected users (based on assessment criteria) as participants.
+- Participants receive an invitation via the Telegram bot, which they must accept or decline within a set time, with a deadline and notification system.
+- Projects are divided into tasks. The notification process for task assignment follows the same principle as project invitations.
+- Completed tasks are reviewed and evaluated using a points system. The total score determines the participant's overall rating, which is automatically calculated.
+
+## Project Structure
+- **Projects**: Created by admins, involving specific tasks and deadlines.
+- **Tasks**: Subdivisions of a project, assigned to users based on their role (Student, Intern, Analyst).
+- **Ratings**: Users receive ratings based on their task performance, influencing their overall rank on the platform.
+
+## Installation
+See `Deploy the Project on a Remote Server` section
+
+
 # Deploy the Project on a Remote Server
 
 ## Preparation
@@ -71,6 +107,9 @@
 
      **Important:** Double-check that all `image:` references in `docker-compose.production.yml` point to your repository username.
 
+7. **Use your own domain name**
+   - Change `consultplacetest.sytes.net` to your own domain in all the configuration files.
+
 ## Launch
 
 - **From the local machine:**
@@ -82,13 +121,42 @@
    - Will rebuild DockerHub images for the containers and push them to the DockerHub repositories.
    - During deployment, it will `copy docker-compose.production.yml`, recreate the `.env` files, and run daemonized docker compose.
 
+
 # Описание проекта
-Это - MVP-версия для проекта платформы на Django с интеграцией пользовательского интерфейса через телеграм бот. В данной версии подключена админ-панель. Реализован API. Работают сигналы Джанго и подключены асинхронные задачи Celery на Redis. Регистрация пользователя через телеграм бот. Сервис представляет гибрид финконсалтинга и образовательного ресурса.
-Сценарий пользователя
-Пользователь регистрируется через телеграм бот. В базе данных создается сущность. Для этого объекта рандомно назначается тестовое задание по финконсалтингу и дается несколько дней для его выполнения. За сутки до дедлайна пользователь (если необходимо) получает напоминание в телеграм бот о дедлайне. Пользователь посылает тестовое задание ссылкой на файл. Авторизованные пользователи проверяют это задание и предлагают испытуемому занять одну из 3 позиций (Студент, Стажер или Аналитик). В зависимости от назначенной должности предполатается разный сценарий поведения пользователя на ресурсе. Студенту предлагается освоить курс по финконсалтингу. Стажер участвует в аналитике на безвозмездной основе. Аналитик участвует в Проекте за деньги.
-Админ создает Проект и по своим критериям оценки приглашает в него исполнителей. Исполнителю приходит уведомление в телеграм бот о приглашении в Проект, которое он должен в какой-то срок подтвердить или отказаться от приглашения. Для этого есть дедлайн и уведомление о нем.
-Проект делится на Задачи. Принцип уведомления о постановке Задачи - тот же. Выполненная задача проверяется и оценивается системой баллов.
-Совокупно оценки по задачам определяет общий рейтинг. Он подсчитывается автоматически.
+Это MVP-версия платформы, разработанной на Django с интеграцией пользовательского интерфейса через телеграм-бота. В данной версии подключена админ-панель, реализован API, работают сигналы Django и подключены асинхронные задачи с использованием Celery на базе Redis. Регистрация пользователя происходит через телеграм-бота. Сервис представляет собой гибрид финансового консалтинга и образовательного ресурса.
+
+## Возможности
+- **Интеграция с Telegram ботом**: Пользователи взаимодействуют с платформой через Telegram.
+- **Админ-панель Django**: Интерфейс для администрирования пользователей, проектов и задач.
+- **API**: Реализованы API-эндпоинты для взаимодействия с платформой.
+- **Асинхронные задачи**: Обработка фоновых задач с использованием Celery и Redis.
+- **Регистрация пользователей**: Регистрация через телеграм-бот с последующей выдачей задач и приглашений.
+- **Система уведомлений**: Напоминания и уведомления о задачах и дедлайнах через Telegram.
+
+## Сценарий пользователя
+- Пользователь регистрируется через телеграм-бот, и для него создается объект в базе данных.
+- Объекту случайным образом назначается тестовое задание по финансовому консалтингу с установленным сроком выполнения.
+- За сутки до дедлайна (при необходимости) пользователь получает напоминание через телеграм-бот.
+- Пользователь отправляет ссылку на файл с выполненным тестовым заданием.
+- Авторизованные пользователи проверяют задание и предлагают одну из трех должностей:
+  - **Студент**: Проходит курс по финансовому консалтингу.
+  - **Стажер**: Участвует в аналитической работе на добровольной основе.
+  - **Аналитик**: Участвует в проектах за вознаграждение.
+
+## Рабочий процесс администратора
+- Администраторы создают проекты и приглашают выбранных пользователей (на основании оценки) в качестве исполнителей.
+- Исполнители получают приглашение в проект через телеграм-бот с установленным сроком для принятия решения. Если они не ответят вовремя, приходит напоминание о дедлайне.
+- Проект делится на задачи. Принцип уведомления при назначении задач такой же, как и для приглашения в проект.
+- Выполненные задачи проверяются и оцениваются системой баллов. Суммарная оценка задач определяет общий рейтинг пользователя, который подсчитывается автоматически.
+
+## Структура проекта
+- **Проекты**: Создаются администраторами и содержат задачи с установленными дедлайнами.
+- **Задачи**: Подразделения проектов, которые назначаются пользователям в зависимости от их роли (Студент, Стажер, Аналитик).
+- **Рейтинги**: Оценки пользователей за выполнение задач формируют их общий рейтинг на платформе.
+
+## Установка
+См. раздел `Развернуть проект на удаленном сервере`
+
 
 # Развернуть проект на удаленном сервере
 
@@ -96,7 +164,7 @@
 
 1. **Создайте файлы переменных окружения в репозитории git:**
 
-    - Создайте файл для бота:
+    - Создайте файл для бота (или пропустите этот шаг: все нужные файлы будут созданы автоматически при деплое):
       ```bash
       touch bot/.env_bot
       ```
@@ -108,7 +176,7 @@
       REDIS_DB=2
       ```
 
-    - Создайте файл для приложения:
+    - Создайте файл для приложения (или пропустите этот шаг: все нужные файлы будут созданы автоматически при деплое):
       ```bash
       touch consultplsce/.env
       ```
@@ -167,58 +235,3 @@
    - запустит тесты
    - пересоберет оразы dockerhub для контейнеров и отправит их в репозитории dockerhub
    - во время деплоя скопирует `docker-compose.production.yml`, пересоздаст `.env` файлы и запустит docker-compose в режиме демона
-
-
-# consultplace_crm!!!
-
-Развернуть проект на удаленном сервере
-Подготовка
-    1. Создайте файлы переменных окружения в репозитории git
-        touch bot/.env_bot
-            с переменными:
-                BOT_TOKEN=<your value>
-                REDIS_HOST= ip вашего удаленного сервера
-                REDIS_PORT=6379
-                REDIS_DB=2
-        touch consultplsce/.env
-            с переменными:
-                BOT_TOKEN=<your value>
-                SECRET_KEY=<django project secret key>
-                POSTGRES_DB=<your value>
-                POSTGRES_PASSWORD=<your value>
-                POSTGRES_USER=<your value>
-                DB_HOST=db (должен совпадать с именем контейнера базы данных)
-                DB_PORT=5432
-                CELERY_BROKER_URL=redis://<ip вашего удаленного сервера>:6379/1
-                CELERY_RESULT_BACKEND=redis://<ip вашего удаленного сервера>:6379/1
-    2. В Settings > Secrets and variables > Actions для данного репозитория git должны быть указаны секреты:
-        BOT_TOKEN
-        SECRET_KEY
-        POSTGRES_DB
-        POSTGRES_PASSWORD
-        POSTGRES_USER
-        DB_HOST
-        CELERY_BROKER_URL
-        CELERY_RESULT_BACKEND
-        REDIS_HOST
-        REDIS_PORT
-        REDIS_DB
-    3. На удаленном сервере установлен Git и сервер подключен к нему через SSH
-    4. На удаленном сервере установлен Redis и слушает порт по умолчанию (6379)
-    5. В main.yml указана корректная ветка репозитория, с которого должен быть произведен деплой
-    6. В docker-compose файлах для директивы
-        image:
-       указаны репозитории DockerHub, к которым вы имеете доступ на чтение и запись (соответственно приведенные в docker-compose файлах примеры следует заменить на удаленные образа собственной сборки). Это необходимо потому что автомитизация после отправки обновленного кода на github пересобирает образы и пытается перезаписать соответствующий репозиторий dockerhub, но у вас для этого нет прав. Следовательно, нужно пересобрать образа контейнеров и указать для них свой собственный репозиторий:
-        <your dockerhub usernane>/crm_leo-backend:latest
-        <your dockerhub usernane>/crm_leo-bot:latest
-        <your dockerhub usernane>/crm_leo-nginx:latest
-      (дважды проверьте что все image: ссылаются на ваш репозиторий)
-
-Запуск
-    С локальной машины:
-        git push
-    (при условии что сервер видит репозиторий git, в main.yml указаны команды, нужные для запуска)
-    Воркфлоу git actions
-        запустит тесты
-        пересоберет оразы dockerhub для контейнеров и отправит их в репозитории dockerhub
-        во время деплоя скопирует docker-compose.production.yml, пересоздаст .env файлы и запустит docker-compose в режиме демона
