@@ -1,34 +1,34 @@
 # Project Overview
-This is an MVP version of a platform project built with Django, integrated with a user interface via a Telegram bot. In this version, the admin panel is enabled, an API is implemented, Django signals are functional, and asynchronous tasks using Celery on Redis are configured. User registration occurs through the Telegram bot. The service is a hybrid of financial consulting and an educational resource.
+This is the MVP version of a platform built with Django, featuring a user interface integrated with a Telegram bot. It includes an admin panel, a fully functional API, Django signals, and asynchronous task handling using Celery with Redis. User registration is done through the Telegram bot. The service combines financial consulting with educational resources.
 
 ## Features
-- **Telegram Bot Integration**: Users interact with the platform via Telegram.
-- **Django Admin Panel**: Admin interface for managing users, projects, and tasks.
-- **API**: Exposes API endpoints for various platform interactions.
-- **Celery Tasks**: Asynchronous task processing using Celery with Redis as the broker.
-- **User Registration**: Users register through the Telegram bot and receive tasks and project invitations, and so on.
-- **Notification System**: Reminders and notifications sent via Telegram for tasks and deadlines.
+- **Telegram Bot Integration**: Users interact with the platform directly through a Telegram bot.
+- **Django Admin Panel**: Provides an admin interface for managing users, projects, and tasks.
+- **API**: Offers API endpoints for various platform functionalities.
+- **Celery Tasks**: Supports asynchronous task processing using Celery, with Redis as the message broker.
+- **User Registration**: Users register via the Telegram bot, receive tasks, project invitations, and more.
+- **Notification System**: Sends reminders and notifications via Telegram for tasks, deadlines, and project updates.
 
 ## User Scenario
-- The user registers through the Telegram bot, which creates an entity in the database.
-- A random financial consulting test task is assigned to this entity, with a set deadline for completion.
-- 24 hours before the deadline, the user receives a reminder (if necessary) through the Telegram bot.
-- The user submits the completed test task by sharing a file link.
-- Authorized users review the task and offer the test-taker one of three positions:
-  - **Student**: Follows a course in financial consulting.
-  - **Intern**: Participates in analytics on a voluntary basis.
-  - **Analyst**: Engages in paid projects.
+- Users register through the Telegram bot, which creates a record in the database.
+- A random financial consulting test task is assigned to the user with a set deadline for completion.
+- If necessary, the user receives a reminder via the Telegram bot 24 hours before the deadline.
+- The user submits the completed task by sharing a file link.
+- Authorized users review the submission and offer the user one of three roles:
+  - **Student**: Engages in a financial consulting course.
+  - **Intern**: Contributes to analytics work on a voluntary basis.
+  - **Analyst**: Takes part in paid projects.
 
 ## Admin Workflow
-- Admins create projects and invite selected users (based on assessment criteria) as participants.
-- Participants receive an invitation via the Telegram bot, which they must accept or decline within a set time, with a deadline and notification system.
-- Projects are divided into tasks. The notification process for task assignment follows the same principle as project invitations.
-- Completed tasks are reviewed and evaluated using a points system. The total score determines the participant's overall rating, which is automatically calculated.
+- Admins create projects and invite selected users based on certain assessment criteria.
+- Participants receive an invitation via the Telegram bot, which they must accept or decline within a set time. Reminders are sent if deadlines approach.
+- Projects are divided into tasks, with task notifications following the same structure as project invitations.
+- Completed tasks are reviewed and scored based on a points system. The total score determines the participant’s overall rating, which is automatically calculated.
 
 ## Project Structure
-- **Projects**: Created by admins, involving specific tasks and deadlines.
-- **Tasks**: Subdivisions of a project, assigned to users based on their role (Student, Intern, Analyst).
-- **Ratings**: Users receive ratings based on their task performance, influencing their overall rank on the platform.
+- **Projects**: Created by admins, with specific tasks and deadlines assigned to participants.
+- **Tasks**: Subdivisions of a project, assigned to users based on their roles (Student, Intern, Analyst).
+- **Ratings**: Participants are evaluated based on task performance, and their overall score determines their ranking on the platform.
 
 ## Installation
 See `Deploy the Project on a Remote Server` section
